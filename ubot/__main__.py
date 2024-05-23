@@ -13,7 +13,7 @@ async def loader_user(user_id, _ubot):
     ubot_ = Ubot(**_ubot)
     try:
         await asyncio.wait_for(ubot_.start(), timeout=90)
-        await ubot_.join_chat("kynansupport")
+        await ubot_.join_chat("agiksuport")
         # monggo.del_log_group(ubot_)
     except KeyError as tol:
         LOGGER(__name__).error(f"Ni Bocah Ke Ban : {user_id} di {tol}")
