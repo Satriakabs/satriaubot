@@ -11,7 +11,7 @@ from pyrogram.enums import *
 from pyrogram.handlers import *
 from pyrogram.types import *
 from pyromod import listen
-from pytgcalls import PyTgCalls
+from pytgcalls import GroupCallFactory
 
 from ubot.config import *
 
@@ -58,13 +58,8 @@ class Ubot(Client):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.api_id = API_ID
-        self.api_hash = API_HASH
-        self.device_model = "Himi-Ubot"
-        self.ipv6 = False
-        self.session_string = None
-        self.no_updates = False
-        self.call_py = PyTgCalls(self)
+        self.device_model = "satria-Ubot"
+        self.group_call = GroupCallFactory(self).get_group_call()
 
     def on_message(self, filters=None, group=99):
         def decorator(func):
@@ -79,7 +74,6 @@ class Ubot(Client):
 
     async def start(self):
         await super().start()
-        await self.call_py.start()
         handler = monggo.get_pref(self.me.id)
         if handler:
             self._prefix[self.me.id] = handler
@@ -147,7 +141,7 @@ ubot = Ubot(name="ubot")
 
 class Bot(Client):
     def __init__(self, **kwargs):
-        super().__init__(**kwargs, device_model="V1HimiUbot")
+        super().__init__(**kwargs, device_model="satria-ubot")
 
     def on_message(self, filters=None, group=99):
         def decorator(func):
