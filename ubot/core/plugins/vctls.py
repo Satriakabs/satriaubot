@@ -3,16 +3,21 @@ from contextlib import suppress
 from random import randint
 from typing import Optional
 
+
+
 from pyrogram import Client, enums
 from pyrogram.raw.functions.channels import GetFullChannel
 from pyrogram.raw.functions.messages import GetFullChat
 from pyrogram.raw.functions.phone import CreateGroupCall, DiscardGroupCall
 from pyrogram.raw.types import InputGroupCall, InputPeerChannel, InputPeerChat
 from pyrogram.types import Message
-from pytgcalls.exceptions import AlreadyJoinedError
-from pytgcalls.types.input_stream import InputAudioStream, InputStream
+
+
 
 from ubot import *
+
+
+
 
 
 async def get_group_call(
@@ -34,15 +39,18 @@ async def get_group_call(
     return False
 
 
+
+
+
 async def start_vctools(client, message):
     flags = " ".join(message.command[1:])
-    ky = await message.reply("<code>Processing....</code>")
+    ky = await message.reply(f"<code>Processing....</code>")
     vctitle = get_arg(message)
     if flags == enums.ChatType.CHANNEL:
         chat_id = message.chat.title
     else:
         chat_id = message.chat.id
-    args = f"<b>• Obrolan Suara Aktif</b>\n<b>• Chat : </b><code>{message.chat.title}</code>"
+    args = f"<b> Obrolan Suara Aktif</b>\n<b>{emo.alive} Chat : </b><code>{message.chat.title}</code>"
     try:
         if not vctitle:
             await client.invoke(
@@ -65,8 +73,11 @@ async def start_vctools(client, message):
         await ky.edit(f"<b>INFO:</b> `{e}`")
 
 
+
+
+
 async def stop_vctools(client, message):
-    ky = await message.reply("<code>Processing....</code>")
+    ky = await message.reply(f"<code>Processing....</code>")
     message.chat.id
     if not (
         group_call := (await get_group_call(client, message, err_msg=", Kesalahan..."))
@@ -74,53 +85,40 @@ async def stop_vctools(client, message):
         return
     await client.invoke(DiscardGroupCall(call=group_call))
     await ky.edit(
-        f"<b>• Obrolan Suara Diakhiri</b>\n<b>• Chat : </b><code>{message.chat.title}</code>"
+        f"<b> Obrolan Suara Diakhiri</b>\n<b> Chat : </b><code>{message.chat.title}</code>"
+
     )
 
 
+
 async def join_os(client, message):
-    # global turun_dewek
-    ky = await message.reply("<code>Processing....</code>")
     chat_id = message.command[1] if len(message.command) > 1 else message.chat.id
     with suppress(ValueError):
         chat_id = int(chat_id)
-    if chat_id:
-        file = "./storage/vc.mp3"
-        try:
-            # daftar_join.append(chat_id)
-            # if turun_dewek: turun_dewek = False
-            await client.call_py.join_group_call(
-                chat_id,
-                InputStream(
-                    InputAudioStream(
-                        file,
-                    ),
-                ),
-            )
-            await sleep(2)
-            await ky.edit(
-                f"❏ <b>Berhasil Join Voice Chat</b>\n└ <b>Chat :</b><code>{message.chat.title}</code>"
-            )
-            await sleep(1)
-        except AlreadyJoinedError:
-            await ky.edit("Akun anda sudah diatas.")
-        except Exception as e:
-            return await ky.edit(f"ERROR: {e}")
+    try:
+        await client.group_call.start(chat_id)
+    except (ValueError, Exception) as e:
+        return await message.reply(f"ERROR: {e}")
+    await message.reply(
+        f"**Berhasil Join Voice**\n**Chat** : {message.chat.title}")
+    await asyncio.sleep(1)
+    await client.group_call.set_is_mute(True)
+
 
 
 async def turun_os(client, message):
-    # global turun_dewek
-    ky = await message.reply("<code>Processing....</code>")
     chat_id = message.command[1] if len(message.command) > 1 else message.chat.id
     with suppress(ValueError):
         chat_id = int(chat_id)
-    if chat_id:
+    turun = await client.group_call.stop()
+    if turun:
+        await message.reply(f"Anda sedang tidak berada di dalam obrolan suara manapun.")
+    else:
         try:
-            # daftar_join.remove(chat_id)
-            await client.call_py.leave_group_call(chat_id)
-            # turun_dewek = True
-            await ky.edit(
-                f"❏ <b>Berhasil Meninggalkan Voice Chat</b>\n└ <b>Chat :</b><code>{message.chat.title}</code>"
-            )
+            await client.group_call.stop()
         except Exception as e:
-            return await ky.edit(f"<b>ERROR:</b> {e}")
+            return await message.reply(f"ERROR: {e}")
+        msg = f"**Berhasil Meninggalkan Voice Chat**\n"
+        if chat_id:
+            msg += f"**Chat**: {message.chat.title}"
+        await message.reply(msg)
