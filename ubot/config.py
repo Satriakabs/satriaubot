@@ -4,8 +4,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-DEVS = [ 6952656422 6314633791
-]
+DEVS = [ 6952656422, 6314633791]
 
 KYNAN = list(
     map(
