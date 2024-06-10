@@ -16,9 +16,9 @@ KYNAN = list(
     )
 )
 
-API_ID = int(os.getenv("API_ID", "27523718"))
+API_ID = int(os.getenv("API_ID", "14472171"))
 
-API_HASH = os.getenv("API_HASH", "5fb07188233692a8fdfe5c084e04fc50")
+API_HASH = os.getenv("API_HASH", "f6e50b6da35f2e5e1822de48dcfa43bd")
 
 BOT_TOKEN = os.getenv("BOT_TOKEN", "7408130591:AAHF70fGsGU453i7VqaT-8cqdsEp0NKpygM")
 
