@@ -16,13 +16,13 @@ KYNAN = list(
     )
 )
 
-API_ID = int(os.getenv("API_ID", "14472171"))
+API_ID = int(os.getenv("API_ID", "32212364"))
 
-API_HASH = os.getenv("API_HASH", "f6e50b6da35f2e5e1822de48dcfa43bd")
+API_HASH = os.getenv("API_HASH", "f418b3ddcbc4fe037045f2af8c4b2b76")
 
-BOT_TOKEN = os.getenv("BOT_TOKEN", "7408130591:AAHF70fGsGU453i7VqaT-8cqdsEp0NKpygM")
+BOT_TOKEN = os.getenv("BOT_TOKEN", "9172397233:AAGAchueiYBZ8Ob2ADrgLLKa4Ee3snUrdp0")
 
-OWNER_ID = int(os.getenv("OWNER_ID", "6765874560"))
+OWNER_ID = int(os.getenv("OWNER_ID", "6219133216"))
 
 USER_ID = list(
     map(
