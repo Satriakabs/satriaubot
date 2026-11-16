@@ -1,17 +1,29 @@
+
 name: Auto Fix
+
 on: [push]
+
+permissions:
+  contents: write
+
 jobs:
   python-auto-fix:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
+
       - name: Setup Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
       - name: Install Dependencies
         run: |
           python -m pip install --upgrade pip
           pip install black isort autoflake flake8
+
       - name: Auto Fix
         run: |
           black --exclude=venv .
@@ -19,8 +31,9 @@ jobs:
           autoflake --in-place --recursive --remove-all-unused-imports --remove-unused-variables --ignore-init-module-imports .
           flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics --extend-ignore=E203,W503
           flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+
       - name: Code Analysis
-        uses: stefanzweifel/git-auto-commit-action@v4
+        uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: "Auto Fix"
           commit_options: "--no-verify"
